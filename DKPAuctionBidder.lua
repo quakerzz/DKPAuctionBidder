@@ -6,6 +6,7 @@ local DKPAuctionBidder_COLOUR_INTRO				= "|c80F0F0F0"
 local DKPAuctionBidder_COLOUR_CHAT				= "|c8040A0F8"  
 local DKPAuctionBidder_AuctionState             = 0 -- 0: No Auction, 1: Auction - no bids, 2: Auction - with bids
 local DKPAuctionBidder_PlayerDKP                = 0
+local DKPAuctionBidder_SOTA_Master              = ""
 
 local currentbid = {}
 
@@ -51,16 +52,18 @@ function DKPAuctionBidder_MinimapButtonOnClick()
     if DKPAuctionBidder_AuctionState == 0 then
         getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
     elseif DKPAuctionBidder_AuctionState == 1 then
-        getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Bids")
+        getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids yet")
     elseif DKPAuctionBidder_AuctionState == 2 then
-        getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] " DKP by "..currentbid[4])
+        getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by "..currentbid[4])
     end
-    getglobal("DKPAuctionBidderPlayerDKPButtonText"):SetText("Your DKP: " ..DKPAuctionBidder_PlayerDKP)
 end
 
 function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
     if prefix == "SOTA_reply_DKPAuctionBidder" then
-        DEFAULT_CHAT_FRAME:AddMessage(DKPAuctionBidder_COLOUR_CHAT .. msg .. DKPAuctionBidder_CHAT_END)
+        if string.find(msg, UnitName("player")) == 1 then
+            local message = string.sub(msg, string.len(UnitName("player"))+1)
+            DEFAULT_CHAT_FRAME:AddMessage(DKPAuctionBidder_COLOUR_CHAT .. message .. DKPAuctionBidder_CHAT_END)
+        end
     end
 
     local message = string.sub(msg, 1, string.len("HIGEST_BID")+1)
@@ -70,18 +73,27 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
 
     if prefix == DKPAuctionBidder_SOTAprefix then
         if msg == "SOTA_AUCTION_START" then
+            DKPAuctionBidder_SOTA_Master = sender
             DKPAuctionBidderUIFrame:Show()
-            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Bids")
-            getglobal("DKPAuctionBidderPlayerDKPButtonText"):SetText("Your DKP: " ..DKPAuctionBidder_PlayerDKP)
+            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids yet")
+            DKPAuctionBidder_GetPlayerDKP()
             DKPAuctionBidder_AuctionState = 1
         elseif message == "HIGHEST_BID" then
-            --if currentbid[4] == UnitName("player") then currentbid[4] = currentbid[4] .."(you)"
-            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by "..currentbid[4])
-            DKPAuctionBidder_AuctionState = 2
+            if sender == DKPAuctionBidder_SOTA_Master then
+                --if currentbid[4] == UnitName("player") then currentbid[4] = currentbid[4] .."(you)"
+                getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by "..currentbid[4])
+                DKPAuctionBidder_AuctionState = 2
+            end
         elseif msg == "SOTA_AUCTION_FINISH" or msg == "SOTA_AUCTION_CANCEL" then
-            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
-            DKPAuctionBidder_AuctionState = 0
+            if sender == DKPAuctionBidder_SOTA_Master then
+                getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
+                DKPAuctionBidder_AuctionState = 0
+            end
         end
+
+        if msg == "SOTAMASTER" then
+            DKPAuctionBidder_SOTA_Master = sender
+        end 
     end
 end
 
@@ -112,7 +124,8 @@ function DKPAuctionBidder_GetPlayerDKP()
             end
             DKPAuctionBidder_PlayerDKP = (1*dkp)
         end
-	end
+    end
+    getglobal("DKPAuctionBidderPlayerDKPButtonText"):SetText("Your DKP: " ..DKPAuctionBidder_PlayerDKP)
 end
 
 function DKPAuctionBidder_SplitString(inputstr)
