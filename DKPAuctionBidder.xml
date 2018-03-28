@@ -62,7 +62,7 @@
     <!--	DKPAuctionBidder UI Frame	-->
 	<Frame name="DKPAuctionBidderUIFrame" parent="UIParent" toplevel="true" hidden="true">
 		<Size>
-			<AbsDimension x="180" y="150" />
+			<AbsDimension x="250" y="130" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -83,18 +83,45 @@
         <Frames>
 			<Button name="DKPAuctionBidderHighestBidTextButton">
 				<Size>
-					<AbsDimension x="150" y="23" />
+					<AbsDimension x="230" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="4" y="-25" />
+						<Offset x="16" y="-25" />
 					</Anchor>
 				</Anchors>
 				<Layers>
 					<Layer>
 						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
 							<Size>
-								<AbsDimension x="150" y="23"/>
+								<AbsDimension x="230" y="23"/>
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<Color r="1" g="1" b="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+			</Button>
+			<Button name="DKPAuctionBidderPlayerDKPButton">
+				<Size>
+					<AbsDimension x="230" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="16" y="-40" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
+							<Size>
+								<AbsDimension x="230" y="23"/>
 							</Size>
 							<Anchors>
 								<Anchor point="LEFT">
@@ -110,11 +137,11 @@
 			</Button>
             <Button name="DKPAuctionBidderBidMinButton" inherits="UIPanelButtonTemplate" text="Bid MIN">
 				<Size>
-					<AbsDimension x="60" y="23" />
+					<AbsDimension x="100" y="23" />
 				</Size>
 				<Anchors>
-					<Anchor point="LEFT">
-						<Offset x="16" y="0" />
+					<Anchor point="BOTTOMLEFT">
+						<Offset x="16" y="16" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -123,11 +150,11 @@
 			</Button>
 			<Button name="DKPAuctionBidderBidMaxButton" inherits="UIPanelButtonTemplate" text="Bid MAX">
 				<Size>
-					<AbsDimension x="60" y="23" />
+					<AbsDimension x="100" y="23" />
 				</Size>
 				<Anchors>
-					<Anchor point="RIGHT">
-						<Offset x="-16" y="0" />
+					<Anchor point="BOTTOMRIGHT">
+						<Offset x="-16" y="16" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -136,11 +163,11 @@
 			</Button>
 			<EditBox name="DKPAuctionBidderBidEditBox" inherits="InputBoxTemplate" letters="6">
 				<Size>
-					<AbsDimension x="45" y="32"/>
+					<AbsDimension x="90" y="32"/>
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
-						<Offset x="16" y="6"/>
+						<Offset x="26" y="38"/>
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -156,11 +183,11 @@
 			</EditBox>
 			<Button name="DKPAuctionBidderBidXButton" inherits="UIPanelButtonTemplate" text="Bid">
 				<Size>
-					<AbsDimension x="60" y="23" />
+					<AbsDimension x="100" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT">
-						<Offset x="-16" y="10" />
+						<Offset x="-16" y="42" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
