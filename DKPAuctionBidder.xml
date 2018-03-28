@@ -1,0 +1,302 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Script file="DKPAuctionBidder.lua" />
+        <Button name="DKPList_MinimapButtonFrame" toplevel="true" frameStrata="HIGH" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+		<Size>
+			<AbsDimension x="33" y="33"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="-18" y="-100"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parent_Texture" file="Interface\AddOns\DKPAuctionBidder\Icon">
+					<Size>
+						<AbsDimension x="17" y="17"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="8" y="-8"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
+				</Texture>
+			</Layer>
+		<Layer level="OVERLAY">
+			<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+				<Size>
+					<AbsDimension x="56" y="56"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+			</Texture>
+		</Layer>
+		</Layers>
+		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+		<Scripts>
+			<OnLoad>
+				this:RegisterForClicks("LeftButtonUp")
+				this:RegisterForDrag("RightButton")
+				this:SetClampedToScreen(true)
+			</OnLoad>
+			<OnClick>
+                DKPAuctionBidder_MinimapButtonOnClick();
+			</OnClick>
+			<OnDragStart>
+				this:LockHighlight()
+				this:StartMoving()
+			</OnDragStart>
+			<OnDragStop>
+				this:UnlockHighlight()
+				this:StopMovingOrSizing()
+			</OnDragStop>
+		</Scripts>
+	</Button>
+
+    <!--	DKPAuctionBidder UI Frame	-->
+	<Frame name="DKPAuctionBidderUIFrame" parent="UIParent" toplevel="true" hidden="true">
+		<Size>
+			<AbsDimension x="180" y="150" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset x="312" y="-118" />
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+        <Frames>
+			<Button name="DKPAuctionBidderHighestBidTextButton">
+				<Size>
+					<AbsDimension x="150" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="4" y="-25" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
+							<Size>
+								<AbsDimension x="150" y="23"/>
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset>
+										<AbsDimension x="10" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<Color r="1" g="1" b="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+			</Button>
+            <Button name="DKPAuctionBidderBidMinButton" inherits="UIPanelButtonTemplate" text="Bid MIN">
+				<Size>
+					<AbsDimension x="60" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT">
+						<Offset x="16" y="0" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>DKPAuctionBidder_BidMinOnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="DKPAuctionBidderBidMaxButton" inherits="UIPanelButtonTemplate" text="Bid MAX">
+				<Size>
+					<AbsDimension x="60" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="RIGHT">
+						<Offset x="-16" y="0" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>DKPAuctionBidder_BidMaxOnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<EditBox name="DKPAuctionBidderBidEditBox" inherits="InputBoxTemplate" letters="6">
+				<Size>
+					<AbsDimension x="45" y="32"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT">
+						<Offset x="16" y="6"/>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						this:SetAutoFocus(false);
+						this:SetTextInsets(0, 0, 0, 0);
+					</OnLoad>
+					<OnEnterPressed>
+						this:ClearFocus();
+					</OnEnterPressed>
+				</Scripts>
+				<FontString name="DKPAuctionBidderBidXString" inherits="GameFontNormal"></FontString>
+			</EditBox>
+			<Button name="DKPAuctionBidderBidXButton" inherits="UIPanelButtonTemplate" text="Bid">
+				<Size>
+					<AbsDimension x="60" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT">
+						<Offset x="-16" y="10" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>DKPAuctionBidder_BidXOnEnter(DKPAuctionBidderBidEditBox:GetText());</OnClick>
+				</Scripts>
+			</Button>
+        </Frames>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parentHeaderTexture" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="180" y="64" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="12" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString inherits="GameFontNormal" text="DKP Auction UI">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentHeaderTexture">
+							<Offset>
+								<AbsDimension x="0" y="-14" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				this:SetMovable(true)
+				this:SetUserPlaced(true)
+				this:RegisterForDrag("LeftButton")
+			</OnLoad>
+			<OnDragStart>
+				this:StartMoving()
+			</OnDragStart>
+			<OnDragStop>
+				this:StopMovingOrSizing()
+			</OnDragStop>
+		</Scripts>
+    </Frame>
+
+	<Frame name="DKPAuctionBidderMaxBidConfirmationFrame" parent="UIParent" toplevel="true" hidden="true">
+		<Size>
+			<AbsDimension x="250" y="150" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset x="0" y="0" />
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+		<Frames>
+			<Button name="DKPAuctionBidderMaxBidConfirmTextButton">
+				<Size>
+					<AbsDimension x="230" y="60" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOP">
+						<Offset x="0" y="-30" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
+							<Size>
+								<AbsDimension x="230" y="60"/>
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<Color r="1" g="1" b="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+			</Button>
+			<Button name="DKPAuctionBidderMaxBidConfirmButton" inherits="UIPanelButtonTemplate" text="Confirm">
+				<Size>
+					<AbsDimension x="60" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT">
+						<Offset x="16" y="30" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>DKPAuctionBidder_MaxBidConfirmOnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="DKPAuctionBidderMaxBidDeclineButton" inherits="UIPanelButtonTemplate" text="Decline">
+				<Size>
+					<AbsDimension x="60" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT">
+						<Offset x="-16" y="30" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>DKPAuctionBidder_MaxBidDeclineOnClick();</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+
+
+    <!-- Dummy event frame -->
+	<Frame name="DKPAuctionBidderEventFrame">
+		<Scripts>
+			<OnLoad>
+				DKPAuctionBidder_OnLoad();
+			</OnLoad>
+			<OnEvent>
+				if (DKPAuctionBidder_OnEvent) then
+					DKPAuctionBidder_OnEvent(event, arg1, arg2, arg3, arg4, arg5);
+				end
+			</OnEvent>
+		</Scripts>
+	</Frame>
+</Ui>
