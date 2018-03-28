@@ -194,6 +194,19 @@
 					<OnClick>DKPAuctionBidder_BidXOnEnter(DKPAuctionBidderBidEditBox:GetText());</OnClick>
 				</Scripts>
 			</Button>
+			<!-- Top right corner close button -->
+			<Button name="$parentTopCloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPLeft">
+						<Offset x="215" y="-4" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						DKPAuctionBidder_CloseUI();
+					</OnClick>
+				</Scripts>
+			</Button>
         </Frames>
 		<Layers>
 			<Layer level="ARTWORK">

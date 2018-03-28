@@ -52,10 +52,15 @@ function DKPAuctionBidder_MinimapButtonOnClick()
     if DKPAuctionBidder_AuctionState == 0 then
         getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
     elseif DKPAuctionBidder_AuctionState == 1 then
-        getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids yet")
+        getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids")
     elseif DKPAuctionBidder_AuctionState == 2 then
         getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by "..currentbid[4])
     end
+end
+
+function DKPAuctionBidder_CloseUI()
+    DKPAuctionBidderMaxBidConfirmationFrame:Hide()
+    DKPAuctionBidderUIFrame:Hide()
 end
 
 function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
@@ -75,7 +80,7 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
         if msg == "SOTA_AUCTION_START" then
             DKPAuctionBidder_SOTA_Master = sender
             DKPAuctionBidderUIFrame:Show()
-            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids yet")
+            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids")
             DKPAuctionBidder_GetPlayerDKP()
             DKPAuctionBidder_AuctionState = 1
         elseif message == "HIGHEST_BID" then
