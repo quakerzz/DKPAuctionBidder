@@ -78,7 +78,7 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             --if currentbid[4] == UnitName("player") then currentbid[4] = currentbid[4] .."(you)"
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by "..currentbid[4])
             DKPAuctionBidder_AuctionState = 2
-        elseif msg == "SOTA_AUCTION_FINISH" then
+        elseif msg == "SOTA_AUCTION_FINISH" or msg == "SOTA_AUCTION_CANCEL" then
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
             DKPAuctionBidder_AuctionState = 0
         end
