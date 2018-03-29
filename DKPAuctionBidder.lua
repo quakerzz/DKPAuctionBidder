@@ -4,9 +4,11 @@ local DKPAuctionBidder_SOTAprefix = "SOTAv1"
 local DKPAuctionBidder_CHAT_END					= "|r"
 local DKPAuctionBidder_COLOUR_INTRO				= "|c80F0F0F0"
 local DKPAuctionBidder_COLOUR_CHAT				= "|c8040A0F8"  
-local DKPAuctionBidder_AuctionState             = 0 -- 0: No Auction, 1: Auction - no bids, 2: Auction - with bids
+local DKPAuctionBidder_AuctionState             = 0 -- 0: No Auction, 1: Auction - no bids, 2: Auction - with bids, 3: Auction Paused
 local DKPAuctionBidder_PlayerDKP                = 0
 local DKPAuctionBidder_SOTA_Master              = ""
+local DKPAuctionBidder_SubmitBidTimer           = 1 -- time between to bid submissions in seconds
+local DKPAuctionBidder_SubmitBidFlag            = 1 -- 1: Able to submit bid, 0: Not able to submit bid
 
 local currentbid = {}
 
@@ -24,8 +26,11 @@ function DKPAuctionBidder_OnLoad()
 end
 
 function DKPAuctionBidder_BidMinOnClick()
-    local sendtext = "bid min"
-    SendAddonMessage(DKPAuctionBidder_Identifier, sendtext, "RAID")
+    if DKPAuctionBidder_SubmitBidFlag == 1 then
+        local sendtext = "bid min"
+        SendAddonMessage(DKPAuctionBidder_Identifier, sendtext, "RAID")
+        DKPAuctionBidder_SubmitBidFlag = 0
+    end
 end
 
 function DKPAuctionBidder_BidMaxOnClick()
@@ -33,18 +38,34 @@ function DKPAuctionBidder_BidMaxOnClick()
 end
 
 function DKPAuctionBidder_BidXOnEnter(dkp)
-    local sendtext = "bid " ..dkp
-    SendAddonMessage(DKPAuctionBidder_Identifier, sendtext, "RAID")
+    if DKPAuctionBidder_SubmitBidFlag == 1 then
+        local sendtext = "bid " ..dkp
+        SendAddonMessage(DKPAuctionBidder_Identifier, sendtext, "RAID")
+        DKPAuctionBidder_SubmitBidFlag = 0
+    end
 end
 
 function DKPAuctionBidder_MaxBidConfirmOnClick()
-    local sendtext = "bid max"
-    SendAddonMessage(DKPAuctionBidder_Identifier, sendtext, "RAID")
-    DKPAuctionBidderMaxBidConfirmationFrame:Hide()
+    if DKPAuctionBidder_SubmitBidFlag == 1 then
+        local sendtext = "bid max"
+        SendAddonMessage(DKPAuctionBidder_Identifier, sendtext, "RAID")
+        DKPAuctionBidderMaxBidConfirmationFrame:Hide()
+        DKPAuctionBidder_SubmitBidFlag = 0
+    end
 end
 
 function DKPAuctionBidder_MaxBidDeclineOnClick()
     DKPAuctionBidderMaxBidConfirmationFrame:Hide()
+end
+
+local DKPAuctionBidder_Timer = 0
+
+function DKPAuctionBidder_BidFrameOnUpdate(elapsed)
+    DKPAuctionBidder_Timer = DKPAuctionBidder_Timer + elapsed
+    if DKPAuctionBidder_Timer > DKPAuctionBidder_SubmitBidTimer then
+        DKPAuctionBidder_Timer = 0
+        DKPAuctionBidder_SubmitBidFlag = 1
+    end
 end
 
 function DKPAuctionBidder_MinimapButtonOnClick()
@@ -55,7 +76,10 @@ function DKPAuctionBidder_MinimapButtonOnClick()
         getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids")
     elseif DKPAuctionBidder_AuctionState == 2 then
         getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by "..currentbid[4])
+    elseif DKPAuctionBidder_AuctionState == 3 then
+        getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Paused")
     end
+    DKPAuctionBidder_GetPlayerDKP()
 end
 
 function DKPAuctionBidder_CloseUI()
@@ -78,27 +102,25 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
 
     if prefix == DKPAuctionBidder_SOTAprefix then
         if msg == "SOTA_AUCTION_START" then
-            DKPAuctionBidder_SOTA_Master = sender
-            DKPAuctionBidderUIFrame:Show()
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids")
             DKPAuctionBidder_GetPlayerDKP()
+            DKPAuctionBidderUIFrame:Show()
             DKPAuctionBidder_AuctionState = 1
         elseif message == "HIGHEST_BID" then
-            if sender == DKPAuctionBidder_SOTA_Master then
-                --if currentbid[4] == UnitName("player") then currentbid[4] = currentbid[4] .."(you)"
-                getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by "..currentbid[4])
-                DKPAuctionBidder_AuctionState = 2
-            end
+            --if currentbid[4] == UnitName("player") then currentbid[4] = currentbid[4] .."(you)"
+            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by "..currentbid[4])
+            DKPAuctionBidder_AuctionState = 2
         elseif msg == "SOTA_AUCTION_FINISH" or msg == "SOTA_AUCTION_CANCEL" then
-            if sender == DKPAuctionBidder_SOTA_Master then
-                getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
-                DKPAuctionBidder_AuctionState = 0
-            end
+            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
+            DKPAuctionBidder_AuctionState = 0
+        elseif msg == "SOTA_AUCTION_PAUSE" then
+            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Paused")
+            DKPAuctionBidder_AuctionState = 3
         end
 
         if msg == "SOTAMASTER" then
             DKPAuctionBidder_SOTA_Master = sender
-        end 
+        end
     end
 end
 

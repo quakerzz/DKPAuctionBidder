@@ -239,6 +239,9 @@
 				this:SetUserPlaced(true)
 				this:RegisterForDrag("LeftButton")
 			</OnLoad>
+			<OnUpdate>
+				DKPAuctionBidder_BidFrameOnUpdate(arg1);
+			</OnUpdate>
 			<OnDragStart>
 				this:StartMoving()
 			</OnDragStart>
