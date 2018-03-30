@@ -226,9 +226,14 @@
 						<Offset x="14" y="-11" />
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentBG">
-					<Color r="1.0" g="0.0" b="0.5" a="1.0"/>
+				<NormalTexture name="$parentTexture" file="Interface\AddOns\DKPAuctionBidder\Gloss.tga">
+					<Color r="1" g="1" b="1"/>
 				</NormalTexture>
+				<Scripts>
+					<OnLoad>
+						getglobal(this:GetName() .."Texture"):SetVertexColor(0.8, 0.0, 0.0, 1)
+					</OnLoad>
+				</Scripts>
 			</Button>
 			<Frame name="$parentTimerFrame" parent="DKPAuctionBidderUIFrame" toplevel="false" hidden="true">
 				<Size>
@@ -318,18 +323,18 @@
 		<Frames>
 			<Button name="DKPAuctionBidderMaxBidConfirmTextButton">
 				<Size>
-					<AbsDimension x="230" y="60" />
+					<AbsDimension x="230" y="80" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOP">
-						<Offset x="0" y="-30" />
+						<Offset x="0" y="-15" />
 					</Anchor>
 				</Anchors>
 				<Layers>
 					<Layer>
-						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
+						<FontString name="$parentText" justifyH="CENTER" inherits="GameFontNormal" font="Fonts\FRIZQT__.TTF">
 							<Size>
-								<AbsDimension x="230" y="60"/>
+								<AbsDimension x="230" y="80"/>
 							</Size>
 							<Anchors>
 								<Anchor point="LEFT">
@@ -338,18 +343,19 @@
 									</Offset>
 								</Anchor>
 							</Anchors>
+							<FontHeight val="16" />
 							<Color r="1" g="1" b="1" />
 						</FontString>
 					</Layer>
 				</Layers>
 			</Button>
-			<Button name="DKPAuctionBidderMaxBidConfirmButton" inherits="UIPanelButtonTemplate" text="Confirm">
+			<Button name="DKPAuctionBidderMaxBidConfirmButton" inherits="UIPanelButtonTemplate" text="Confirm"	>
 				<Size>
-					<AbsDimension x="60" y="23" />
+					<AbsDimension x="100" y="30" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
-						<Offset x="16" y="30" />
+						<Offset x="16" y="16" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -358,11 +364,11 @@
 			</Button>
 			<Button name="DKPAuctionBidderMaxBidDeclineButton" inherits="UIPanelButtonTemplate" text="Decline">
 				<Size>
-					<AbsDimension x="60" y="23" />
+					<AbsDimension x="100" y="30" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT">
-						<Offset x="-16" y="30" />
+						<Offset x="-16" y="16" />
 					</Anchor>
 				</Anchors>
 				<Scripts>

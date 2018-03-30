@@ -54,6 +54,7 @@ function DKPAuctionBidder_BidMinOnClick()
 end
 
 function DKPAuctionBidder_BidMaxOnClick()
+    getglobal("DKPAuctionBidderMaxBidConfirmTextButtonText"):SetText("Are you sure \n you want to bid \n ALL (" ..DKPAuctionBidder_PlayerDKP ..") \n your DKP?")
     DKPAuctionBidderMaxBidConfirmationFrame:Show()
 end
 
@@ -67,6 +68,7 @@ end
 
 function DKPAuctionBidder_MaxBidConfirmOnClick()
     if DKPAuctionBidder_SubmitBidFlag == 1 then
+        getglobal("DKPAuctionBidderMaxBidConfirmTextButtonText"):SetText("Are you sure you want \n to bid ALL your DKP(" ..DKPAuctionBidder_PlayerDKP ..")?")
         local sendtext = "bid max"
         SendAddonMessage(DKPAuctionBidder_Identifier, sendtext, "RAID")
         DKPAuctionBidderMaxBidConfirmationFrame:Hide()
@@ -166,6 +168,8 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
         elseif msg == "SOTA_AUCTION_FINISH" or msg == "SOTA_AUCTION_CANCEL" then
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText("")
+            DKPAuctionBidderUIFrameAuctionStatusbar:Hide()
+            DKPAuctionBidderUIFrameTimerFrame:Hide()
             DKPAuctionBidder_AuctionState = 0
         elseif msg == "SOTA_AUCTION_PAUSE" then
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Paused")
