@@ -256,6 +256,78 @@
 					</EdgeSize>
 				</Backdrop>
 			</Frame>
+			
+			<!-- Current item frame -->
+			<Frame name="$parentItem" toplevel="true" hidden="true">		
+				<Size>
+					<AbsDimension x="250" y="80" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOP">
+						<Offset>
+							<AbsDimension x="0" y="85" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="12" right="12" top="12" bottom="12" />
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="32" />
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="32" />
+					</EdgeSize>
+				</Backdrop>
+
+				<Frames>
+					<Frame name="$parentItem">
+						<Size>
+							<AbsDimension x="48" y="48" />
+						</Size>
+						<Anchors>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK">
+								<Texture name="$parentTexture" file="">
+									<Anchors>
+										<Anchor point="TOP" relativeTo="$parentHeaderTexture">
+											<Offset>
+												<AbsDimension x="0" y="-14" />
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentItemName" inherits="GameFontNormal" font="Fonts\FRIZQT__.TTF" text="">
+							<Color r="" g="" b="" a="" />
+							<FontHeight val="12" />
+							<Size>
+								<AbsDimension x="164" y="40" />
+							</Size>
+							<Anchors>
+								<Anchor point="Left">
+									<Offset>
+										<AbsDimension x="68" y="0" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
         </Frames>
 		<Layers>
 			<Layer level="ARTWORK">

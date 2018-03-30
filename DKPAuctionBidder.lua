@@ -31,6 +31,15 @@ local DKPAuctionBidder_CLASS_COLORS = {
 	{ "Warrior",		{ 199,156,110 } }	--199 	156 	110 	0.78 	0.61 	0.43 	#C79C6E
 }
 
+local DKPAuctionBidder_QUALITY_COLORS = {
+	{0, "Poor",			{ 157,157,157 } },	--9d9d9d
+	{1, "Common",		{ 255,255,255 } },	--ffffff
+	{2, "Uncommon",		{  30,255,  0 } },	--1eff00
+	{3, "Rare",			{   0,112,255 } },	--0070ff
+	{4, "Epic",			{ 163, 53,238 } },	--a335ee
+	{5, "Legendary",	{ 255,128,  0 } }	--ff8000
+}
+
 function DKPAuctionBidder_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
     if (event == "CHAT_MSG_ADDON") then
         DKPAuctionBidder_OnChatMsgAddon(event, arg1, arg2, arg3, arg4, arg5)
@@ -140,7 +149,7 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
         end
     end
 
-    local message = string.sub(msg, 1, string.len("HIGEST_BID")+1)
+    local msg_HB = string.sub(msg, 1, string.len("HIGEST_BID")+1)
     local text = getglobal("DKPAuctionBidderHighestBidTextButtonText"):GetText()
 
     currentbid = DKPAuctionBidder_SplitString(msg)
@@ -150,14 +159,34 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
         if string.find(msg, "SOTA_AUCTION_START") == 1 then
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids")
             DKPAuctionBidder_GetPlayerDKP()
+
             DKPAuctionBidder_AuctionTime = currentbid[4]
             DKPAuctionBidder_AuctionTimeLeft = currentbid[4]
             getglobal("DKPAuctionBidderUIFrameAuctionStatusbar"):SetWidth(DKPAuctionBidder_StatusbarStandardwidth)
+
+            local itemName, _, itemQuality, _, _, _, _, _, itemTexture = GetItemInfo(currentbid[5])
+
             DKPAuctionBidderUIFrame:Show()
             DKPAuctionBidderUIFrameAuctionStatusbar:Show()
             DKPAuctionBidderUIFrameTimerFrame:Show()
+
+            local frame = getglobal("DKPAuctionBidderUIFrameItem")
+            if frame then
+                local rgb = DKPAuctionBidder_GetQualityColor(itemQuality)
+                local inf = getglobal(frame:GetName().."ItemName")
+                inf:SetText(itemName)
+                inf:SetTextColor( (rgb[1]/255), (rgb[2]/255), (rgb[3]/255), 1)
+                
+                local tf = getglobal(frame:GetName().."ItemTexture")
+                if tf then
+                    tf:SetTexture(itemTexture)
+                end
+                frame:Show()
+            end
+
             DKPAuctionBidder_AuctionState = 1
-        elseif message == "HIGHEST_BID" then
+
+        elseif msg_HB == "HIGHEST_BID" then
             --if currentbid[4] == UnitName("player") then currentbid[4] = currentbid[4] .."(you)"
             local color = DKPAuctionBidder_GetClassColorCodes(currentbid[5]);
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by ")
@@ -165,17 +194,21 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
             DKPAuctionBidder_LastHighestBid = currentbid
             DKPAuctionBidder_AuctionState = 2
+
         elseif msg == "SOTA_AUCTION_FINISH" or msg == "SOTA_AUCTION_CANCEL" then
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: No Auction")
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText("")
-            DKPAuctionBidderUIFrameAuctionStatusbar:Hide()
-            DKPAuctionBidderUIFrameTimerFrame:Hide()
+            getglobal("DKPAuctionBidderUIFrameAuctionStatusbar"):Hide()
+            getglobal("DKPAuctionBidderUIFrameTimerFrame"):Hide()
+            getglobal("DKPAuctionBidderUIFrameItem"):Hide()
             DKPAuctionBidder_AuctionState = 0
+
         elseif msg == "SOTA_AUCTION_PAUSE" then
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Paused")
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText("")
             DKPAuctionBidder_AuctionStatePrePause = DKPAuctionBidder_AuctionState
             DKPAuctionBidder_AuctionState = 3
+
         elseif string.find(msg, "SOTA_AUCTION_RESUME") == 1 then
             if DKPAuctionBidder_AuctionStatePrePause == 2 then
                 local color = DKPAuctionBidder_GetClassColorCodes(DKPAuctionBidder_LastHighestBid[5]);
@@ -184,6 +217,7 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
                 getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
                 DKPAuctionBidder_AuctionTimeLeft = currentbid[4]
                 DKPAuctionBidder_AuctionState = 2
+
             elseif DKPAuctionBidder_AuctionStatePrePause == 1 then
                 getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids")
                 DKPAuctionBidder_AuctionTimeLeft = currentbid[4]
@@ -243,6 +277,18 @@ function DKPAuctionBidder_GetClassColorCodes(classname)
 	end
 
 	return colors;
+end
+
+function DKPAuctionBidder_GetQualityColor(quality)
+	for n=1, table.getn(DKPAuctionBidder_QUALITY_COLORS), 1 do
+		local q = DKPAuctionBidder_QUALITY_COLORS[n];
+		if q[1] == quality then
+			return q[3]
+		end
+	end
+	
+	-- Unknown quality code; can't happen! Let's just return poor quality!
+	return DKPAuctionBidder_QUALITY_COLORS[1][3];
 end
 
 function DKPAuctionBidder_SplitString(inputstr)
