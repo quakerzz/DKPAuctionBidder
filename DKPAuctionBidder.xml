@@ -147,7 +147,7 @@
 			</Button>
             <Button name="DKPAuctionBidderBidMinButton" inherits="UIPanelButtonTemplate" text="Bid MIN">
 				<Size>
-					<AbsDimension x="100" y="23" />
+					<AbsDimension x="108" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
@@ -160,7 +160,7 @@
 			</Button>
 			<Button name="DKPAuctionBidderBidMaxButton" inherits="UIPanelButtonTemplate" text="Bid MAX">
 				<Size>
-					<AbsDimension x="100" y="23" />
+					<AbsDimension x="108" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT">
@@ -173,11 +173,11 @@
 			</Button>
 			<EditBox name="DKPAuctionBidderBidEditBox" inherits="InputBoxTemplate" letters="6">
 				<Size>
-					<AbsDimension x="90" y="32"/>
+					<AbsDimension x="98" y="32"/>
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
-						<Offset x="26" y="38"/>
+						<Offset x="24" y="38"/>
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -193,7 +193,7 @@
 			</EditBox>
 			<Button name="DKPAuctionBidderBidXButton" inherits="UIPanelButtonTemplate" text="Bid">
 				<Size>
-					<AbsDimension x="100" y="23" />
+					<AbsDimension x="108" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT">
