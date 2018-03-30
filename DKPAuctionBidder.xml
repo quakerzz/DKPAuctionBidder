@@ -105,6 +105,16 @@
 							</Anchors>
 							<Color r="1" g="1" b="1" />
 						</FontString>
+						<FontString name="$parentPlayer" justifyH="LEFT" inherits="GameFontNormal">
+							<Size>
+								<AbsDimension x="95" y="23"/>
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentText">
+									<Offset x="-95" y="0" />
+								</Anchor>
+							</Anchors>
+						</FontString>
 					</Layer>
 				</Layers>
 			</Button>
@@ -197,7 +207,7 @@
 			<!-- Top right corner close button -->
 			<Button name="$parentTopCloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
-					<Anchor point="TOPLeft">
+					<Anchor point="TOPLEFT">
 						<Offset x="215" y="-4" />
 					</Anchor>
 				</Anchors>
@@ -207,6 +217,40 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+			<Button name="$parentAuctionStatusbar" toplevel="true" hidden="true">
+				<Size>
+					<AbsDimension x="222" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent">
+						<Offset x="14" y="-11" />
+					</Anchor>
+				</Anchors>
+				<NormalTexture name="$parentBG">
+					<Color r="1.0" g="0.0" b="0.5" a="1.0"/>
+				</NormalTexture>
+			</Button>
+			<Frame name="$parentTimerFrame" parent="DKPAuctionBidderUIFrame" toplevel="false" hidden="true">
+				<Size>
+					<AbsDimension x="250" y="50" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset x="0" y="-35" />
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="12" right="12" top="12" bottom="12" />
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="32" />
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="32" />
+					</EdgeSize>
+				</Backdrop>
+			</Frame>
         </Frames>
 		<Layers>
 			<Layer level="ARTWORK">
