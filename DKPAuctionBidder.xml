@@ -56,6 +56,16 @@
 				this:UnlockHighlight()
 				this:StopMovingOrSizing()
 			</OnDragStop>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+				GameTooltip:AddLine("DKPAuctionBidder", 1, 1, 1)
+				GameTooltip:AddLine("Left click to open UI", 1, 1, 0)
+				GameTooltip:AddLine("Right click and drag to move the button", 1, 1, 0)
+				GameTooltip:Show()
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
 		</Scripts>
 	</Button>
 
