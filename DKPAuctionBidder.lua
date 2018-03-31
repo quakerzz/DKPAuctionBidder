@@ -99,6 +99,7 @@ function DKPAuctionBidder_BidFrameOnUpdate(elapsed)
     end
     if DKPAuctionBidder_AuctionState == 1 or DKPAuctionBidder_AuctionState == 2 then
         if DKPAuctionBidder_RefreshTimer > DKPAuctionBidder_AuctionTimerUpdateRate then
+            if DKPAuctionBidder_AuctionTimeLeft > DKPAuctionBidder_AuctionTime then DKPAuctionBidder_AuctionTime = DKPAuctionBidder_AuctionTimeLeft end
             DKPAuctionBidder_AuctionTimeLeft = DKPAuctionBidder_AuctionTimeLeft - DKPAuctionBidder_RefreshTimer
             DKPAuctionBidder_RefreshTimer = 0
             local fraction = DKPAuctionBidder_AuctionTimeLeft/DKPAuctionBidder_AuctionTime
@@ -159,8 +160,8 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids")
             DKPAuctionBidder_GetPlayerDKP()
 
-            DKPAuctionBidder_AuctionTime = currentbid[4]
-            DKPAuctionBidder_AuctionTimeLeft = currentbid[4]
+            DKPAuctionBidder_AuctionTime = tonumber(currentbid[4])
+            DKPAuctionBidder_AuctionTimeLeft = tonumber(currentbid[4])
             getglobal("DKPAuctionBidderUIFrameAuctionStatusbar"):SetWidth(DKPAuctionBidder_StatusbarStandardwidth)
 
             local itemName, itemString, itemQuality, _, _, _, _, _, itemTexture = GetItemInfo(currentbid[5])
@@ -216,12 +217,12 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
                 getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_LastHighestBid[3] .." DKP by ")
                 getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(DKPAuctionBidder_LastHighestBid[4])
                 getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
-                DKPAuctionBidder_AuctionTimeLeft = currentbid[4]
+                DKPAuctionBidder_AuctionTimeLeft = tonumber(currentbid[4])
                 DKPAuctionBidder_AuctionState = 2
 
             elseif DKPAuctionBidder_AuctionStatePrePause == 1 then
                 getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: Auction Running - No Bids")
-                DKPAuctionBidder_AuctionTimeLeft = currentbid[4]
+                DKPAuctionBidder_AuctionTimeLeft = tonumber(currentbid[4])
                 DKPAuctionBidder_AuctionState = 1
             end
         end
@@ -232,7 +233,7 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
     end
 
     if prefix == "SOTA_TIMER_SYNC" then
-        DKPAuctionBidder_AuctionTimeLeft = msg
+        DKPAuctionBidder_AuctionTimeLeft = tonumber(msg)
     end
 end
 
