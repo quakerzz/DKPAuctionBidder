@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Script file="DKPAuctionBidder.lua" />
-        <Button name="DKPList_MinimapButtonFrame" toplevel="true" frameStrata="HIGH" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+        <Button name="DKPList_MinimapButtonFrame" toplevel="true" frameStrata="MEDIUM" parent="Minimap" enableMouse="true" movable="true" hidden="false">
 		<Size>
 			<AbsDimension x="33" y="33"/>
 		</Size>
@@ -72,7 +72,7 @@
     <!--	DKPAuctionBidder UI Frame	-->
 	<Frame name="DKPAuctionBidderUIFrame" parent="UIParent" toplevel="true" hidden="true">
 		<Size>
-			<AbsDimension x="250" y="130" />
+			<AbsDimension x="220" y="130" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -93,7 +93,7 @@
         <Frames>
 			<Button name="DKPAuctionBidderHighestBidTextButton">
 				<Size>
-					<AbsDimension x="230" y="23" />
+					<AbsDimension x="200" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
@@ -104,7 +104,7 @@
 					<Layer>
 						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
 							<Size>
-								<AbsDimension x="230" y="23"/>
+								<AbsDimension x="200" y="23"/>
 							</Size>
 							<Anchors>
 								<Anchor point="LEFT">
@@ -130,7 +130,7 @@
 			</Button>
 			<Button name="DKPAuctionBidderPlayerDKPButton">
 				<Size>
-					<AbsDimension x="230" y="23" />
+					<AbsDimension x="200" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
@@ -141,7 +141,7 @@
 					<Layer>
 						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
 							<Size>
-								<AbsDimension x="230" y="23"/>
+								<AbsDimension x="200" y="23"/>
 							</Size>
 							<Anchors>
 								<Anchor point="LEFT">
@@ -157,7 +157,7 @@
 			</Button>
             <Button name="DKPAuctionBidderBidMinButton" inherits="UIPanelButtonTemplate" text="Bid MIN">
 				<Size>
-					<AbsDimension x="108" y="23" />
+					<AbsDimension x="93" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
@@ -170,7 +170,7 @@
 			</Button>
 			<Button name="DKPAuctionBidderBidMaxButton" inherits="UIPanelButtonTemplate" text="Bid MAX">
 				<Size>
-					<AbsDimension x="108" y="23" />
+					<AbsDimension x="93" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT">
@@ -183,7 +183,7 @@
 			</Button>
 			<EditBox name="DKPAuctionBidderBidEditBox" inherits="InputBoxTemplate" letters="6">
 				<Size>
-					<AbsDimension x="98" y="32"/>
+					<AbsDimension x="83" y="32"/>
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
@@ -203,7 +203,7 @@
 			</EditBox>
 			<Button name="DKPAuctionBidderBidXButton" inherits="UIPanelButtonTemplate" text="Bid">
 				<Size>
-					<AbsDimension x="108" y="23" />
+					<AbsDimension x="93" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT">
@@ -218,7 +218,7 @@
 			<Button name="$parentTopCloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="215" y="-4" />
+						<Offset x="185" y="-4" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -229,14 +229,14 @@
 			</Button>
 			<Button name="$parentAuctionStatusbar" toplevel="true" hidden="true">
 				<Size>
-					<AbsDimension x="222" y="23" />
+					<AbsDimension x="192" y="23" />
 				</Size>
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent">
 						<Offset x="14" y="-11" />
 					</Anchor>
 				</Anchors>
-				<NormalTexture name="$parentTexture" file="Interface\AddOns\DKPAuctionBidder\Gloss.tga">
+				<NormalTexture name="$parentTexture" file="Interface\AddOns\DKPAuctionBidder\Luna.tga">
 					<Color r="1" g="1" b="1"/>
 				</NormalTexture>
 				<Scripts>
@@ -247,7 +247,7 @@
 			</Button>
 			<Frame name="$parentTimerFrame" parent="DKPAuctionBidderUIFrame" toplevel="false" hidden="true">
 				<Size>
-					<AbsDimension x="250" y="50" />
+					<AbsDimension x="220" y="50" />
 				</Size>
 				<Anchors>
 					<Anchor point="BOTTOM">
@@ -270,7 +270,7 @@
 			<!-- Current item frame -->
 			<Frame name="$parentItem" toplevel="true" hidden="true">		
 				<Size>
-					<AbsDimension x="250" y="80" />
+					<AbsDimension x="220" y="80" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOP">
@@ -334,7 +334,7 @@
 							<Color r="" g="" b="" a="" />
 							<FontHeight val="12" />
 							<Size>
-								<AbsDimension x="164" y="40" />
+								<AbsDimension x="134" y="40" />
 							</Size>
 							<Anchors>
 								<Anchor point="Left">
