@@ -19,6 +19,9 @@ local DKPAuctionBidder_StatusbarStandardwidth   = 0
 local currentbid                                = {}
 local DKPAuctionBidder_LastHighestBid           = {}
 
+DKPAuctionBidder_CurrenItemLink = ""
+
+
 local DKPAuctionBidder_CLASS_COLORS = {
 	{ "Druid",			{ 255,125, 10 } },	--255 	125 	10		1.00 	0.49 	0.04 	#FF7D0A
 	{ "Hunter",			{ 171,212,115 } },	--171 	212 	115 	0.67 	0.83 	0.45 	#ABD473 
@@ -29,15 +32,6 @@ local DKPAuctionBidder_CLASS_COLORS = {
 	{ "Shaman",			{ 245,140,186 } },	--245 	140 	186 	0.96 	0.55 	0.73 	#F58CBA
 	{ "Warlock",		{ 148,130,201 } },	--148 	130 	201 	0.58 	0.51 	0.79 	#9482C9
 	{ "Warrior",		{ 199,156,110 } }	--199 	156 	110 	0.78 	0.61 	0.43 	#C79C6E
-}
-
-local DKPAuctionBidder_QUALITY_COLORS = {
-	{0, "Poor",			{ 157,157,157 } },	--9d9d9d
-	{1, "Common",		{ 255,255,255 } },	--ffffff
-	{2, "Uncommon",		{  30,255,  0 } },	--1eff00
-	{3, "Rare",			{   0,112,255 } },	--0070ff
-	{4, "Epic",			{ 163, 53,238 } },	--a335ee
-	{5, "Legendary",	{ 255,128,  0 } }	--ff8000
 }
 
 function DKPAuctionBidder_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
@@ -141,6 +135,11 @@ function DKPAuctionBidder_CloseUI()
     DKPAuctionBidderUIFrame:Hide()
 end
 
+function DKPAuctionBidder_CurrentItemTooltip()
+    GameTooltip:SetHyperlink(DKPAuctionBidder_CurrenItemLink)
+    GameTooltip:Show()
+end
+
 function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
     if prefix == "SOTA_reply_DKPAuctionBidder" then
         if string.find(msg, UnitName("player")) == 1 then
@@ -164,7 +163,10 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             DKPAuctionBidder_AuctionTimeLeft = currentbid[4]
             getglobal("DKPAuctionBidderUIFrameAuctionStatusbar"):SetWidth(DKPAuctionBidder_StatusbarStandardwidth)
 
-            local itemName, _, itemQuality, _, _, _, _, _, itemTexture = GetItemInfo(currentbid[5])
+            local itemName, itemString, itemQuality, _, _, _, _, _, itemTexture = GetItemInfo(currentbid[5])
+            local r, g, b, hex = GetItemQualityColor(itemQuality)
+            --local itemLink =  hex ..  '|H' .. itemString .. '|h[' .. itemName .. ']|h' .. FONT_COLOR_CODE_CLOSE
+            DKPAuctionBidder_CurrenItemLink = itemString
 
             DKPAuctionBidderUIFrame:Show()
             DKPAuctionBidderUIFrameAuctionStatusbar:Show()
@@ -172,10 +174,9 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
 
             local frame = getglobal("DKPAuctionBidderUIFrameItem")
             if frame then
-                local rgb = DKPAuctionBidder_GetQualityColor(itemQuality)
                 local inf = getglobal(frame:GetName().."ItemName")
                 inf:SetText(itemName)
-                inf:SetTextColor( (rgb[1]/255), (rgb[2]/255), (rgb[3]/255), 1)
+                inf:SetTextColor( r, g, b, 1)
                 
                 local tf = getglobal(frame:GetName().."ItemTexture")
                 if tf then
@@ -277,18 +278,6 @@ function DKPAuctionBidder_GetClassColorCodes(classname)
 	end
 
 	return colors;
-end
-
-function DKPAuctionBidder_GetQualityColor(quality)
-	for n=1, table.getn(DKPAuctionBidder_QUALITY_COLORS), 1 do
-		local q = DKPAuctionBidder_QUALITY_COLORS[n];
-		if q[1] == quality then
-			return q[3]
-		end
-	end
-	
-	-- Unknown quality code; can't happen! Let's just return poor quality!
-	return DKPAuctionBidder_QUALITY_COLORS[1][3];
 end
 
 function DKPAuctionBidder_SplitString(inputstr)

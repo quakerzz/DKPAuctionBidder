@@ -316,6 +316,15 @@
 								</Texture>
 							</Layer>
 						</Layers>
+						<Scripts>
+							<OnEnter>
+								GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+								DKPAuctionBidder_CurrentItemTooltip()
+							</OnEnter>
+							<OnLeave>
+								GameTooltip:Hide();
+							</OnLeave>
+						</Scripts>
 					</Frame>
 				</Frames>
 
