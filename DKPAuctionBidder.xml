@@ -104,7 +104,7 @@
 					<Layer>
 						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
 							<Size>
-								<AbsDimension x="200" y="23"/>
+								<AbsDimension x="195" y="23"/>
 							</Size>
 							<Anchors>
 								<Anchor point="LEFT">
@@ -117,11 +117,11 @@
 						</FontString>
 						<FontString name="$parentPlayer" justifyH="LEFT" inherits="GameFontNormal">
 							<Size>
-								<AbsDimension x="95" y="23"/>
+								<AbsDimension x="100" y="23"/>
 							</Size>
 							<Anchors>
 								<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentText">
-									<Offset x="-95" y="0" />
+									<Offset x="-100" y="0" />
 								</Anchor>
 							</Anchors>
 						</FontString>
