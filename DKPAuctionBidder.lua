@@ -12,11 +12,12 @@ local DKPAuctionBidder_SubmitBidTimer           = 1 -- time between to bid submi
 local DKPAuctionBidder_SubmitBidFlag            = 1 -- 1: Able to submit bid, 0: Not able to submit bid
 local DKPAuctionBidder_AuctionTime              = 0
 local DKPAuctionBidder_AuctionTimeLeft          = 0
-local DKPAuctionBidder_AuctionTimerUpdateRate   = 0.05 -- update the timer bar every 0.1 seconds
+local DKPAuctionBidder_AuctionTimerUpdateRate   = 0.05 -- update the timer bar every 0.05 seconds
 local DKPAuctionBidder_StatusbarStandardwidth   = 0
 local DKPAuctionBidder_IsShown                  = 0
+local DKPAuctionBidder_MinimumStartingBid       = 30 -- 30 per default
 
-local currentbid                                = {}
+local DKPAuctionBidder_Currentbid               = {}
 local DKPAuctionBidder_LastHighestBid           = {}
 
 DKPAuctionBidder_CurrenItemLink = ""
@@ -121,9 +122,9 @@ function DKPAuctionBidder_MinimapButtonOnClick()
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Auction Running - No Bids")
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText("")
         elseif DKPAuctionBidder_AuctionState == 2 then
-            local color = DKPAuctionBidder_GetClassColorCodes(currentbid[5]);
-            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." DKP by ")
-            getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(currentbid[4])
+            local color = DKPAuctionBidder_GetClassColorCodes(DKPAuctionBidder_Currentbid[5]);
+            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_Currentbid[3] .." DKP by ")
+            getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(DKPAuctionBidder_Currentbid[4])
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
         elseif DKPAuctionBidder_AuctionState == 3 then
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Auction Paused")
@@ -158,7 +159,7 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
     local msg_HB = string.sub(msg, 1, string.len("HIGEST_BID")+1)
     local text = getglobal("DKPAuctionBidderHighestBidTextButtonText"):GetText()
 
-    currentbid = DKPAuctionBidder_SplitString(msg)
+    DKPAuctionBidder_Currentbid = DKPAuctionBidder_SplitString(msg)
     
 
     if prefix == DKPAuctionBidder_SOTAprefix then
@@ -166,18 +167,28 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Auction Running - No Bids")
             DKPAuctionBidder_GetPlayerDKP()
 
-            DKPAuctionBidder_AuctionTime = tonumber(currentbid[4])
-            DKPAuctionBidder_AuctionTimeLeft = tonumber(currentbid[4])
+            DKPAuctionBidder_AuctionTime = tonumber(DKPAuctionBidder_Currentbid[4])
+            DKPAuctionBidder_AuctionTimeLeft = tonumber(DKPAuctionBidder_Currentbid[4])
             getglobal("DKPAuctionBidderUIFrameAuctionStatusbar"):SetWidth(DKPAuctionBidder_StatusbarStandardwidth)
 
-            local itemName, itemString, itemQuality, _, _, _, _, _, itemTexture = GetItemInfo(currentbid[5])
+            local itemName, itemString, itemQuality, _, _, _, _, _, itemTexture = GetItemInfo(DKPAuctionBidder_Currentbid[5])
             local r, g, b, hex = GetItemQualityColor(itemQuality)
             --local itemLink =  hex ..  '|H' .. itemString .. '|h[' .. itemName .. ']|h' .. FONT_COLOR_CODE_CLOSE
             DKPAuctionBidder_CurrenItemLink = itemString
 
+            DKPAuctionBidder_MinimumStartingBid = tonumber(DKPAuctionBidder_Currentbid[6])
+
             DKPAuctionBidderUIFrame:Show()
             DKPAuctionBidderUIFrameAuctionStatusbar:Show()
             DKPAuctionBidderUIFrameTimerFrame:Show()
+
+            if DKPAuctionBidder_MinimumStartingBid > DKPAuctionBidder_PlayerDKP then
+                getglobal("DKPAuctionBidderBidMaxButton"):Disable()
+                getglobal("DKPAuctionBidderBidXButton"):Disable()
+            else
+                getglobal("DKPAuctionBidderBidMaxButton"):Enable()
+                getglobal("DKPAuctionBidderBidXButton"):Enable()
+            end
 
             local frame = getglobal("DKPAuctionBidderUIFrameItem")
             if frame then
@@ -195,12 +206,12 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             DKPAuctionBidder_AuctionState = 1
 
         elseif msg_HB == "HIGHEST_BID" then
-            --if currentbid[4] == UnitName("player") then currentbid[4] = currentbid[4] .."(you)"
-            local color = DKPAuctionBidder_GetClassColorCodes(currentbid[5]);
-            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..currentbid[3] .." ")
-            getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(currentbid[4])
+            --if DKPAuctionBidder_Currentbid[4] == UnitName("player") then DKPAuctionBidder_Currentbid[4] = DKPAuctionBidder_Currentbid[4] .."(you)"
+            local color = DKPAuctionBidder_GetClassColorCodes(DKPAuctionBidder_Currentbid[5]);
+            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_Currentbid[3] .." ")
+            getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(DKPAuctionBidder_Currentbid[4])
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
-            DKPAuctionBidder_LastHighestBid = currentbid
+            DKPAuctionBidder_LastHighestBid = DKPAuctionBidder_Currentbid
             DKPAuctionBidder_AuctionState = 2
 
         elseif msg == "SOTA_AUCTION_FINISH" or msg == "SOTA_AUCTION_CANCEL" then
@@ -209,6 +220,8 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             getglobal("DKPAuctionBidderUIFrameAuctionStatusbar"):Hide()
             getglobal("DKPAuctionBidderUIFrameTimerFrame"):Hide()
             getglobal("DKPAuctionBidderUIFrameItem"):Hide()
+            getglobal("DKPAuctionBidderBidMaxButton"):Enable()
+            getglobal("DKPAuctionBidderBidXButton"):Enable()
             DKPAuctionBidder_AuctionState = 0
 
         elseif msg == "SOTA_AUCTION_PAUSE" then
@@ -223,14 +236,18 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
                 getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_LastHighestBid[3] .." DKP by ")
                 getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(DKPAuctionBidder_LastHighestBid[4])
                 getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
-                DKPAuctionBidder_AuctionTimeLeft = tonumber(currentbid[4])
+                DKPAuctionBidder_AuctionTimeLeft = tonumber(DKPAuctionBidder_Currentbid[4])
                 DKPAuctionBidder_AuctionState = 2
 
             elseif DKPAuctionBidder_AuctionStatePrePause == 1 then
                 getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Auction Running - No Bids")
-                DKPAuctionBidder_AuctionTimeLeft = tonumber(currentbid[4])
+                DKPAuctionBidder_AuctionTimeLeft = tonumber(DKPAuctionBidder_Currentbid[4])
                 DKPAuctionBidder_AuctionState = 1
             end
+        elseif string.find(msg, "SOTA_ACCEPTED_BID") == 1 and UnitName("player") == DKPAuctionBidder_Currentbid[4] then
+            local item_price = tonumber(DKPAuctionBidder_Currentbid[5])
+            DKPAuctionBidder_PlayerDKP = DKPAuctionBidder_PlayerDKP - item_price
+            getglobal("DKPAuctionBidderPlayerDKPButtonText"):SetText("Your DKP: " ..DKPAuctionBidder_PlayerDKP)
         end
 
         if msg == "SOTAMASTER" then
@@ -290,8 +307,8 @@ end
 function DKPAuctionBidder_SplitString(inputstr)
     local t={} ; i=1
     for w in string.gfind(inputstr, "%w+") do
-            t[i] = w
-            i = i + 1
+        t[i] = w
+        i = i + 1
     end
     return t
 end
