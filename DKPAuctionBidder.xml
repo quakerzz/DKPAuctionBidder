@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Script file="DKPAuctionBidder.lua" />
-        <Button name="DKPList_MinimapButtonFrame" toplevel="true" frameStrata="MEDIUM" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+        <Button name="DKPAuctionBidder_MinimapButtonFrame" toplevel="true" frameStrata="MEDIUM" parent="Minimap" enableMouse="true" movable="true" hidden="false">
 		<Size>
 			<AbsDimension x="33" y="33"/>
 		</Size>

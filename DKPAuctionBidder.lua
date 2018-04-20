@@ -39,12 +39,16 @@ function DKPAuctionBidder_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
     if (event == "CHAT_MSG_ADDON") then
         DKPAuctionBidder_OnChatMsgAddon(event, arg1, arg2, arg3, arg4, arg5)
     end
+    if (event == "GUILD_ROSTER_UPDATE") then
+        DKPAuctionBidder_GetPlayerDKP()
+    end
 end
 
 function DKPAuctionBidder_OnLoad()
     this:RegisterEvent("ADDON_LOADED");
+    this:RegisterEvent("GUILD_ROSTER_UPDATE");
     this:RegisterEvent("CHAT_MSG_ADDON");
-    DKPList_MinimapButtonFrame:Show()
+    getglobal("DKPAuctionBidder_MinimapButtonFrame"):Show()
     DKPAuctionBidder_GetPlayerDKP()
     DKPAuctionBidder_StatusbarStandardwidth = getglobal("DKPAuctionBidderUIFrameAuctionStatusbar"):GetWidth()
 end
@@ -123,7 +127,7 @@ function DKPAuctionBidder_MinimapButtonOnClick()
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText("")
         elseif DKPAuctionBidder_AuctionState == 2 then
             local color = DKPAuctionBidder_GetClassColorCodes(DKPAuctionBidder_Currentbid[5]);
-            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_Currentbid[3] .." DKP by ")
+            getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_Currentbid[3] .." ")
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(DKPAuctionBidder_Currentbid[4])
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
         elseif DKPAuctionBidder_AuctionState == 3 then
@@ -133,14 +137,14 @@ function DKPAuctionBidder_MinimapButtonOnClick()
         DKPAuctionBidder_GetPlayerDKP()
         DKPAuctionBidder_IsShown = 1
     else
-        DKPAuctionBidderUIFrame:Hide()
-        DKPAuctionBidder_IsShown = 0
+        DKPAuctionBidder_CloseUI()
     end
 end
 
 function DKPAuctionBidder_CloseUI()
     DKPAuctionBidderMaxBidConfirmationFrame:Hide()
     DKPAuctionBidderUIFrame:Hide()
+    DKPAuctionBidder_IsShown = 0
 end
 
 function DKPAuctionBidder_CurrentItemTooltip()
@@ -155,14 +159,13 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             DEFAULT_CHAT_FRAME:AddMessage(DKPAuctionBidder_COLOUR_CHAT .. message .. DKPAuctionBidder_CHAT_END)
         end
     end
-
-    local msg_HB = string.sub(msg, 1, string.len("HIGEST_BID")+1)
-    local text = getglobal("DKPAuctionBidderHighestBidTextButtonText"):GetText()
-
-    DKPAuctionBidder_Currentbid = DKPAuctionBidder_SplitString(msg)
     
-
     if prefix == DKPAuctionBidder_SOTAprefix then
+        
+        local msg_HB = string.sub(msg, 1, string.len("HIGEST_BID")+1)
+        local text = getglobal("DKPAuctionBidderHighestBidTextButtonText"):GetText()
+        DKPAuctionBidder_Currentbid = DKPAuctionBidder_SplitString(msg)
+
         if string.find(msg, "SOTA_AUCTION_START") == 1 then
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Auction Running - No Bids")
             DKPAuctionBidder_GetPlayerDKP()
@@ -244,10 +247,6 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
                 DKPAuctionBidder_AuctionTimeLeft = tonumber(DKPAuctionBidder_Currentbid[4])
                 DKPAuctionBidder_AuctionState = 1
             end
-        elseif string.find(msg, "SOTA_ACCEPTED_BID") == 1 and UnitName("player") == DKPAuctionBidder_Currentbid[4] then
-            local item_price = tonumber(DKPAuctionBidder_Currentbid[5])
-            DKPAuctionBidder_PlayerDKP = DKPAuctionBidder_PlayerDKP - item_price
-            getglobal("DKPAuctionBidderPlayerDKPButtonText"):SetText("Your DKP: " ..DKPAuctionBidder_PlayerDKP)
         end
 
         if msg == "SOTAMASTER" then
