@@ -213,8 +213,8 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             local color = DKPAuctionBidder_GetClassColorCodes(DKPAuctionBidder_Currentbid[5]);
             getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_Currentbid[3] .." ")
             getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(DKPAuctionBidder_Currentbid[4])
-            getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
-            DKPAuctionBidder_LastHighestBid = DKPAuctionBidder_Currentbid
+            getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255)
+            DKPAuctionBidder_LastHighestBid = tonumber(DKPAuctionBidder_Currentbid)
             DKPAuctionBidder_AuctionState = 2
 
         elseif msg == "SOTA_AUCTION_FINISH" or msg == "SOTA_AUCTION_CANCEL" then
@@ -236,9 +236,9 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
         elseif string.find(msg, "SOTA_AUCTION_RESUME") == 1 then
             if DKPAuctionBidder_AuctionStatePrePause == 2 then
                 local color = DKPAuctionBidder_GetClassColorCodes(DKPAuctionBidder_LastHighestBid[5]);
-                getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_LastHighestBid[3] .." DKP by ")
+                getglobal("DKPAuctionBidderHighestBidTextButtonText"):SetText("Highest Bid: " ..DKPAuctionBidder_Currentbid[3] .." ")
                 getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetText(DKPAuctionBidder_LastHighestBid[4])
-                getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
+                getglobal("DKPAuctionBidderHighestBidTextButtonPlayer"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255)
                 DKPAuctionBidder_AuctionTimeLeft = tonumber(DKPAuctionBidder_Currentbid[4])
                 DKPAuctionBidder_AuctionState = 2
 
