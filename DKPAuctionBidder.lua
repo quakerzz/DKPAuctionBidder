@@ -185,13 +185,13 @@ function DKPAuctionBidder_OnChatMsgAddon(event, prefix, msg, channel, sender)
             DKPAuctionBidderUIFrameAuctionStatusbar:Show()
             DKPAuctionBidderUIFrameTimerFrame:Show()
 
-            if DKPAuctionBidder_MinimumStartingBid > DKPAuctionBidder_PlayerDKP then
-                getglobal("DKPAuctionBidderBidMaxButton"):Disable()
-                getglobal("DKPAuctionBidderBidXButton"):Disable()
-            else
-                getglobal("DKPAuctionBidderBidMaxButton"):Enable()
-                getglobal("DKPAuctionBidderBidXButton"):Enable()
-            end
+            --if DKPAuctionBidder_MinimumStartingBid > DKPAuctionBidder_PlayerDKP then
+                --getglobal("DKPAuctionBidderBidMaxButton"):Disable()
+                --getglobal("DKPAuctionBidderBidXButton"):Disable()
+            --else
+                --getglobal("DKPAuctionBidderBidMaxButton"):Enable()
+                --getglobal("DKPAuctionBidderBidXButton"):Enable()
+            --end
 
             local frame = getglobal("DKPAuctionBidderUIFrameItem")
             if frame then
