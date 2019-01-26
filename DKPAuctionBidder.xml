@@ -165,7 +165,10 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>DKPAuctionBidder_BidMinOnClick();</OnClick>
+					<OnClick>
+						DKPAuctionBidder_BidMinOnClick();
+						DKPAuctionBidderBidEditBox:ClearFocus();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="DKPAuctionBidderBidMaxButton" inherits="UIPanelButtonTemplate" text="Bid MAX">
@@ -178,7 +181,10 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>DKPAuctionBidder_BidMaxOnClick();</OnClick>
+					<OnClick>
+						DKPAuctionBidder_BidMaxOnClick();
+						DKPAuctionBidderBidEditBox:ClearFocus();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<EditBox name="DKPAuctionBidderBidEditBox" inherits="InputBoxTemplate" letters="6">
@@ -211,7 +217,10 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>DKPAuctionBidder_BidXOnEnter(DKPAuctionBidderBidEditBox:GetText());</OnClick>
+					<OnClick>
+						DKPAuctionBidder_BidXOnEnter(DKPAuctionBidderBidEditBox:GetText());
+						DKPAuctionBidderBidEditBox:ClearFocus();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<!-- Top right corner close button -->
