@@ -270,7 +270,7 @@ function DKPAuctionBidder_GetPlayerDKP()
 		    	zone = "";
 		    end
 
-		    note = publicnote
+		    note = officernote
 
 		    if not note or note == "" then
 		    	note = "<0>";
